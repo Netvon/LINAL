@@ -6,9 +6,9 @@ namespace LINAL.Types
 {
     public class Point3
     {
-        public double X { get; }
-        public double Y { get; }
-        public double Z { get; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
 
         public Point3(double x, double y, double z)
         {

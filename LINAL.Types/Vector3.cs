@@ -6,9 +6,9 @@ namespace LINAL.Types
 {
     public class Vector3 : IEnumerable<double>, IEquatable<Vector3>
     {
-        public double X { get; }
-        public double Y { get; }
-        public double Z { get; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
 
         public double Length => Math.Sqrt((X * X) + (Y * Y) + (Z * Z));
         public Vector3 Normalize => this / Length;
@@ -32,6 +32,9 @@ namespace LINAL.Types
 
         public static Vector3 operator *(Vector3 a, double scalar)
         {
+            if (a == null)
+                return null;
+
             return new Vector3(a.X * scalar, a.Y * scalar, a.Z * scalar);
         }
 

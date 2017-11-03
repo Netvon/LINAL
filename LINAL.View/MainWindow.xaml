@@ -3,11 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:LINAL.View"
         mc:Ignorable="d"
         Title="LINAL View" Height="350" Width="525" DataContext="{Binding Main, Source={StaticResource Locator}}">
     <Grid>
-        <Canvas HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="48*"/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <Canvas>
             <ItemsControl ItemsSource="{Binding Lines}">
                 <ItemsControl.ItemsPanel >
                     <ItemsPanelTemplate>
@@ -17,18 +22,83 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
+                            <Label Content="{Binding Name}" FontSize="7" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Top">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform X="{Binding OriginX}" Y="{Binding OriginY}"/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
                             <Line X1="{Binding Origin.X}" Y1="{Binding Origin.Y}" X2="{Binding XComponent.X}" Y2="{Binding XComponent.Y}"
                                 Stroke="Red"
-                                StrokeThickness="4"/>
+                                StrokeThickness="4" StrokeEndLineCap="Round" StrokeStartLineCap="Square"/>
                             <Line X1="{Binding Origin.X}" Y1="{Binding Origin.Y}" X2="{Binding YComponent.X}" Y2="{Binding YComponent.Y}"
                                 Stroke="Blue"
-                                StrokeThickness="4"/>
+                                StrokeThickness="4" StrokeEndLineCap="Round" StrokeStartLineCap="Square"/>
                         </Grid>
-                        
+
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Canvas>
+        <Border BorderThickness="1" Grid.Column="1" Margin="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Lines}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" BorderThickness="0,0,0,1">
+                                <StackPanel Margin="3,6">
+                                    <TextBox controls:TextBoxHelper.Watermark="Vector Name" controls:TextBoxHelper.UseFloatingWatermark="True"
+                                         Text="{Binding Name}"/>
+                                    <Grid Margin="0,3,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <controls:NumericUpDown Value="{Binding OriginX}"
+                                                        Interval="0.1" 
+                                                        controls:TextBoxHelper.Watermark="Origin X" 
+                                                        controls:TextBoxHelper.UseFloatingWatermark="True" 
+                                                        controls:TextBoxHelper.WatermarkAlignment="Center" Margin="0,0,1.5,0"/>
+                                        <controls:NumericUpDown Value="{Binding OriginY}"
+                                                        Interval="0.1" 
+                                                        controls:TextBoxHelper.Watermark="Origin Y" 
+                                                        controls:TextBoxHelper.UseFloatingWatermark="True" 
+                                                        controls:TextBoxHelper.WatermarkAlignment="Center" Grid.Column="1" Margin="1.5,0,0,0"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,3,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <controls:NumericUpDown Value="{Binding VectorX}"
+                                                        Interval="0.1" 
+                                                        controls:TextBoxHelper.Watermark="Vector X" 
+                                                        controls:TextBoxHelper.UseFloatingWatermark="True" 
+                                                        controls:TextBoxHelper.WatermarkAlignment="Center" Margin="0,0,1.5,0"/>
+                                        <controls:NumericUpDown Value="{Binding VectorY}"
+                                                        Interval="0.1" 
+                                                        controls:TextBoxHelper.Watermark="Vector Y" 
+                                                        controls:TextBoxHelper.UseFloatingWatermark="True" 
+                                                        controls:TextBoxHelper.WatermarkAlignment="Center" Grid.Column="1" Margin="1.5,0,0,0"/>
+                                    </Grid>
+
+                                    <controls:NumericUpDown Value="{Binding Scale}" 
+                                                        Interval="0.1" 
+                                                        controls:TextBoxHelper.Watermark="Scale" 
+                                                        controls:TextBoxHelper.UseFloatingWatermark="True" 
+                                                        controls:TextBoxHelper.WatermarkAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
 
     </Grid>
 </Window>
