@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LINAL.View.Model
 {
-    public class Line2d : INotifyPropertyChanged
+    public class Vector2Model : Drawable
     {
         Point3 origin;
         Vector3 vector;
@@ -17,8 +17,13 @@ namespace LINAL.View.Model
 
         Point3 xComponent;
         Point3 yComponent;
+        Point3 directionComponent;
 
-        string name;
+        
+
+        public Vector2Model() : base("vector")
+        {
+        }
 
         public Point3 Origin
         {
@@ -30,6 +35,8 @@ namespace LINAL.View.Model
                 Update();
             }
         }
+
+        public Vector3 ScaledVector => Vector * Scale;
 
         public Vector3 Vector
         {
@@ -103,26 +110,9 @@ namespace LINAL.View.Model
             }
         }
 
-        public string Name
-        {
-            get => name;
-            set
-            {
-                name = value;
-                OnPropertyChanged();
-            }
-        }
-
-
         public Point3 XComponent => xComponent;
         public Point3 YComponent => yComponent;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public Point3 DirectionComponent => directionComponent;
 
         void Update()
         {
@@ -131,14 +121,18 @@ namespace LINAL.View.Model
                 xComponent = Origin?.Offsets(Vector * Scale).ElementAt(0);
                 yComponent = Origin?.Offsets(Vector * Scale).ElementAt(1);
 
+                directionComponent = new Point3(xComponent.X, yComponent.Y, 0);
+
                 OnPropertyChanged(nameof(XComponent));
                 OnPropertyChanged(nameof(YComponent));
+                OnPropertyChanged(nameof(DirectionComponent));
             }
 
             OnPropertyChanged(nameof(Scale));
             OnPropertyChanged(nameof(Origin));
             OnPropertyChanged(nameof(Vector));
-            
+            OnPropertyChanged(nameof(ScaledVector));
+
         }
     }
 }
