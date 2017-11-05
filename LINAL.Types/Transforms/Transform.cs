@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LINAL.Types.Matrices;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

@@ -57,7 +57,7 @@ namespace LINAL.View.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Drawable(string category)
+        protected Drawable(string category)
         {
             Category = category ?? throw new ArgumentNullException(nameof(category));
         }

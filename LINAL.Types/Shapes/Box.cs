@@ -11,16 +11,16 @@ namespace LINAL.Types.Shapes
         {
             Points.AddRange(new[]
             {
-                // TopLeft
+                // BottomRight
                 new Point3(-1, 1, 1 ),
 
-                // TopRight
+                // BottomLeft
                 new Point3(1, 1, 1 ),
 
-                // BottomRight
+                // TopRight
                 new Point3(1, -1, 1 ),
 
-                // BottomLeft
+                // TopLeft
                 new Point3(-1, -1, 1 )
             });
         }

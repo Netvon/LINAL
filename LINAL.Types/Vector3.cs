@@ -1,24 +1,14 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace LINAL.Types
 {
-    public class Vector3 : IEnumerable<double>, IEquatable<Vector3>
+    public class Vector3 : Point3, IEquatable<Vector3>
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
-
         public double Length => Math.Sqrt((X * X) + (Y * Y) + (Z * Z));
         public Vector3 Normalize => this / Length;
 
-        public Vector3(double x, double y, double z)
-        {
-            X = x;
-            Y = y;
-            Z = z;
-        }
+        public Vector3(double x, double y, double z) : base(x, y, z)
+        { }
 
         public static Vector3 operator +(Vector3 a, Vector3 b)
         {
@@ -41,23 +31,6 @@ namespace LINAL.Types
         public static Vector3 operator /(Vector3 a, double scalar)
         {
             return new Vector3(a.X / scalar, a.Y / scalar, a.Z / scalar);
-        }
-
-        public IEnumerator<double> GetEnumerator()
-        {
-            yield return X;
-            yield return Y;
-            yield return Z;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public override string ToString()
-        {
-            return $"X:{X},Y:{Y},Z:{Z}";
         }
 
         public bool Equals(Vector3 other)

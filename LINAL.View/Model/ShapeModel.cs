@@ -29,7 +29,7 @@ namespace LINAL.View.Model
             {
                 Shape.Translate.X = value;
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -40,7 +40,7 @@ namespace LINAL.View.Model
             {
                 Shape.Translate.Y = value;
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -51,7 +51,7 @@ namespace LINAL.View.Model
             {
                 Shape.Rotation = value;
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -62,7 +62,7 @@ namespace LINAL.View.Model
             {
                 Shape.Skew.X = value;
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -73,7 +73,7 @@ namespace LINAL.View.Model
             {
                 Shape.Skew.Y = value;
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -84,7 +84,7 @@ namespace LINAL.View.Model
             {
                 Shape.Size.X = value;
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -95,7 +95,7 @@ namespace LINAL.View.Model
             {
                 Shape.Size.Y = value;
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -106,7 +106,7 @@ namespace LINAL.View.Model
             {
                 Shape.Scale.X = value;
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -117,7 +117,7 @@ namespace LINAL.View.Model
             {
                 Shape.Scale.Y = value;
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -154,7 +154,7 @@ namespace LINAL.View.Model
             }
         }
 
-        void Update()
+        void Changed()
         {
             OnPropertyChanged(nameof(Points));
             OnPropertyChanged(nameof(PointCollection));

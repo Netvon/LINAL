@@ -2,39 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LINAL.Types
+namespace LINAL.Types.Matrices
 {
-    public class Matrix3x3
+    public class Matrix3x3 : Matrix
     {
-        readonly Dictionary<int, List<double>> data;
-
-        public int Height => data.Count;
-        public int Width => data[0].Count;
-
-        public Matrix3x3()
-        {
-            data = new Dictionary<int, List<double>>
-            {
-                { 0, new List<double>() { 1.0, 0.0, 0.0 } },
-                { 1, new List<double>() { 0.0, 1.0, 0.0 } },
-                { 2, new List<double>() { 0.0, 0.0, 1.0 } },
-            };
-        }
-
-        public double this[int x, int y]
-        {
-            get => data[y][x];
-            set
-            {
-                if (y < 0 || x < 0)
-                    return;
-
-                if (y > Height || x > Width)
-                    return;
-
-                data[y][x] = value;
-            }
-        }
+        public Matrix3x3(bool isIdentity = true) : base(3, 3, isIdentity)
+        { }
 
         public Point3 Transform(Point3 point)
         {

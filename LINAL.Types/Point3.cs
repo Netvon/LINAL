@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
 namespace LINAL.Types
 {
-    public class Point3
+    public class Point3 : IEnumerable<double>
     {
         public double X { get; set; }
         public double Y { get; set; }
@@ -22,6 +23,23 @@ namespace LINAL.Types
             yield return new Point3(X + vector.X, Y, Z);
             yield return new Point3(X, Y + vector.Y, Z);
             yield return new Point3(X, Y, Z + vector.Z);
+        }
+
+        public IEnumerator<double> GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+            yield return Z;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            return $"X:{X},Y:{Y},Z:{Z}";
         }
     }
 }

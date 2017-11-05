@@ -89,19 +89,19 @@ namespace LINAL.View.ViewModel
         {
             Drawables = new ObservableCollection<Drawable>()
             {
-                new Vector2Model()
-                {
-                    Name = "Vector 1",
-                    Origin = new Point3(10,10,0),
-                    Vector = new Vector3(20,20,0)
-                },
+                //new Vector2Model()
+                //{
+                //    Name = "Vector 1",
+                //    Origin = new Point3(10,10,0),
+                //    Vector = new Vector3(20,20,0)
+                //},
 
-                new Vector2Model()
-                {
-                    Name = "Vector 2",
-                    Origin = new Point3(40,10,0),
-                    Vector = new Vector3(20,20,0)
-                },
+                //new Vector2Model()
+                //{
+                //    Name = "Vector 2",
+                //    Origin = new Point3(40,10,0),
+                //    Vector = new Vector3(20,20,0)
+                //},
 
                 new ShapeModel(new Box(100, 100, 30, 30))
                 {

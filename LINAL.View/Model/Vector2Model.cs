@@ -19,11 +19,8 @@ namespace LINAL.View.Model
         Point3 yComponent;
         Point3 directionComponent;
 
-        
-
         public Vector2Model() : base("vector")
-        {
-        }
+        { }
 
         public Point3 Origin
         {
@@ -32,7 +29,7 @@ namespace LINAL.View.Model
             set
             {
                 origin = value;
-                Update();
+                Changed();
             }
         }
 
@@ -45,7 +42,7 @@ namespace LINAL.View.Model
             set
             {
                 vector = value;
-                Update();
+                Changed();
             }
         }
 
@@ -58,7 +55,7 @@ namespace LINAL.View.Model
                 if (scale < Double.Epsilon)
                     scale = Double.Epsilon;
 
-                Update();
+                Changed();
             }
         }
 
@@ -70,7 +67,7 @@ namespace LINAL.View.Model
                 Vector.X = value;
 
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -82,7 +79,7 @@ namespace LINAL.View.Model
                 Vector.Y = value;
 
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -94,7 +91,7 @@ namespace LINAL.View.Model
                 Origin.X = value;
 
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -106,7 +103,7 @@ namespace LINAL.View.Model
                 Origin.Y = value;
 
                 OnPropertyChanged();
-                Update();
+                Changed();
             }
         }
 
@@ -114,7 +111,7 @@ namespace LINAL.View.Model
         public Point3 YComponent => yComponent;
         public Point3 DirectionComponent => directionComponent;
 
-        void Update()
+        void Changed()
         {
             if (Vector != null)
             {
@@ -132,7 +129,6 @@ namespace LINAL.View.Model
             OnPropertyChanged(nameof(Origin));
             OnPropertyChanged(nameof(Vector));
             OnPropertyChanged(nameof(ScaledVector));
-
         }
     }
 }
