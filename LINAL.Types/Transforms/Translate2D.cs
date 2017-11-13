@@ -4,26 +4,27 @@ using System.Text;
 
 namespace LINAL.Types.Transforms
 {
-    public class Translate : Transform
+    public class Translate2D : Transform2D
     {
         public override double X
         {
-            get => matrix[0, 2];
+            get => this[0, 2];
             set
             {
-                matrix[0, 2] = value;
+                this[0, 2] = value;
             }
         }
 
         public override double Y
         {
-            get => matrix[1, 2];
+            get => this[1, 2];
             set
             {
-                matrix[1, 2] = value;
+                this[1, 2] = value;
             }
         }
 
+        [NotImplemented]
         public override double Z { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

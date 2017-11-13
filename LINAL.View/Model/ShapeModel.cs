@@ -1,5 +1,7 @@
 ﻿using LINAL.Types;
+using LINAL.Types.Points;
 using LINAL.Types.Shapes;
+using LINAL.Types.Transforms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +18,8 @@ namespace LINAL.View.Model
         CancellationTokenSource spinCancelToken;
         bool spin;
 
-        public Shape Shape { get; }
-        public ShapeModel(Shape shape) : base("shape")
+        public Shape2D Shape { get; }
+        public ShapeModel(Shape2D shape) : base("shape")
         {
             Shape = shape;
         }
@@ -160,8 +162,69 @@ namespace LINAL.View.Model
             OnPropertyChanged(nameof(PointCollection));
         }
 
-        public IEnumerable<Point3> Points => Shape.ToList();
+        private Translate2D CameraOffset { get; set; } = new Translate2D
+        {
+            X = 0,
+            Y = 0
+        };
 
-        public PointCollection PointCollection => new PointCollection(Shape.Select(p => new Point(p.X, p.Y)));
+        public double CameraOffsetX
+        {
+            get => CameraOffset.X;
+            set
+            {
+                CameraOffset.X = value;
+                OnPropertyChanged();
+                Changed();
+            }
+        }
+
+        public double CameraOffsetY
+        {
+            get => CameraOffset.Y;
+            set
+            {
+                CameraOffset.Y = value;
+                OnPropertyChanged();
+                Changed();
+            }
+        }
+
+        public double CameraRotationZ
+        {
+            get => CameraRotation.Z;
+            set
+            {
+                CameraRotation.Z = value;
+                OnPropertyChanged();
+                Changed();
+            }
+        }
+
+        private Rotate2D CameraRotation { get; set; } = new Rotate2D
+        {
+            Z = 0
+        };
+
+        public IEnumerable<Point3> Points
+        {
+            get
+            {
+                //var translate2D = new Translate2D
+                //{
+                //    X = 0,
+                //    Y = 0
+                //};
+
+                //var rotate2D = new Rotate2D
+                //{
+                //    Z = 0
+                //};
+
+                return Shape.Select(x => new Point3(CameraOffset * CameraRotation * x)).ToList();
+            }
+        }
+
+        public PointCollection PointCollection => new PointCollection(Points.Select(p => new System.Windows.Point(p.X, p.Y)));
     }
 }

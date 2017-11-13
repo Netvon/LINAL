@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.ComponentModel;
 
 namespace LINAL.Types.Transforms
 {
-    public class Skew : Transform
+    public class Scale2D : Transform2D
     {
         public override double X
         {
-            get => matrix[0, 1];
+            get => this[0, 0];
             set
             {
-                matrix[0, 1] = value;
+                this[0, 0] = value;
             }
         }
 
         public override double Y
         {
-            get => matrix[1, 0];
+            get => this[1, 1];
             set
             {
-                matrix[1, 0] = value;
+                this[1, 1] = value;
             }
         }
 
+        [NotImplemented]
         public override double Z { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

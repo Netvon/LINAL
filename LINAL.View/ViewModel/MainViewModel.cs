@@ -1,6 +1,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using LINAL.Types;
+using LINAL.Types.Points;
 using LINAL.Types.Shapes;
 using LINAL.View.Model;
 using System;
@@ -36,7 +37,60 @@ namespace LINAL.View.ViewModel
         public ICommand RemoveVectorCommand => new RelayCommand<string>(RemoveVector);
         public ICommand RemoveBoxCommand => new RelayCommand<string>(RemoveBox);
 
-        public ShapeModel ABox { get; set; }
+        double cameraRot;
+        double cameraOffsetX;
+        double cameraOffsetY;
+
+        public double CameraRotationZ
+        {
+            get => cameraRot;
+            set
+            {
+                foreach (var d in Drawables)
+                {
+                    if(d is ShapeModel s)
+                    {
+                        s.CameraRotationZ = value;
+                    }
+                }
+
+                cameraRot = value;
+            }
+        }
+
+        public double CameraOffsetX
+        {
+            get => cameraOffsetX;
+            set
+            {
+                foreach (var d in Drawables)
+                {
+                    if (d is ShapeModel s)
+                    {
+                        s.CameraOffsetX = value;
+                    }
+                }
+
+                cameraOffsetX = value;
+            }
+        }
+
+        public double CameraOffsetY
+        {
+            get => cameraOffsetY;
+            set
+            {
+                foreach (var d in Drawables)
+                {
+                    if (d is ShapeModel s)
+                    {
+                        s.CameraOffsetY = value;
+                    }
+                }
+
+                cameraOffsetY = value;
+            }
+        }
 
         void AddTriangle()
         {

@@ -1,4 +1,5 @@
 ﻿using LINAL.Types;
+using LINAL.Types.Points;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

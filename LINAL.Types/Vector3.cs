@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LINAL.Types.Points;
+using System;
 
 namespace LINAL.Types
 {

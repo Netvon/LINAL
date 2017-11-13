@@ -1,16 +1,26 @@
-﻿using System;
+﻿using LINAL.Types.Points;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace LINAL.Types.Shapes
 {
-    public class Box : Shape
+    public class Box : Shape2D
     {
+        public Box()
+        {
+            AddPoints();
+        }
+
         public Box(double x, double y, double width, double height)
             : base(x, y, width, height)
         {
-            Points.AddRange(new[]
-            {
+            AddPoints();
+        }
+
+        void AddPoints()
+        {
+            Points.AddRange(new[] {
                 // BottomRight
                 new Point3(-1, 1, 1 ),
 

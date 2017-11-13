@@ -4,74 +4,27 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using System.Linq;
+using LINAL.Types.Matrices;
+using LINAL.Types.Points;
 
 namespace LINAL.Types.Shapes
 {
-    public abstract class Shape : IEnumerable<Point3>
+    public abstract class Shape<TPoint> : IEnumerable<TPoint>
+        where TPoint : Point, new()
     {
-        protected List<Point3> Points { get; }
-        readonly List<Transform> transforms;
+        protected List<TPoint> Points { get; }
+        protected List<Matrix> transforms { get; }
 
-        protected Shape(double x, double y, double width, double height)
+        protected Shape()
         {
-            transforms = new List<Transform>()
-            {
-                new Scale // size
-                {
-                    X = width,
-                    Y = height
-                },
-
-                new Scale(),
-
-                new Rotate(),
-                new Skew(),
-                new Translate
-                {
-                    X = x,
-                    Y = y
-                }
-
-            };
-
-            Points = new List<Point3>();
+            Points = new List<TPoint>();
+            transforms = new List<Matrix>();
         }
 
-        public double Rotation
-        {
-            get => transforms.Find(t => t is Rotate)?.Z ?? 0;
+        public IEnumerable<Matrix> Transforms => transforms;
+        public Matrix MultipliedMatrix => transforms.Skip(1).Aggregate(transforms[0], (a, b) => a * b);
 
-            set => transforms.Find(t => t is Rotate).Z = value % 360;
-        }
-
-        public Scale Size
-        {
-            get => transforms.Find(t => t is Scale) as Scale;
-        }
-
-        public Scale Scale
-        {
-            get => transforms.Last(t => t is Scale) as Scale;
-        }
-
-        public Rotate Rotate
-        {
-            get => transforms.Find(t => t is Rotate) as Rotate;
-        }
-
-        public Skew Skew
-        {
-            get => transforms.Find(t => t is Skew) as Skew;
-        }
-
-        public Translate Translate
-        {
-            get => transforms.Find(t => t is Translate) as Translate;
-        }
-
-        public IEnumerable<Transform> Transforms => transforms;
-
-        public IEnumerator<Point3> GetEnumerator()
+        public IEnumerator<TPoint> GetEnumerator()
         {
             return Points.Select(p => ApplyTransforms(p)).GetEnumerator();
         }
@@ -81,10 +34,20 @@ namespace LINAL.Types.Shapes
             return GetEnumerator();
         }
 
-        Point3 ApplyTransforms(Point3 point)
+        public IEnumerable<TPoint> OriginalPoints => Points;
+
+        public void AddPoint(TPoint point)
         {
-            transforms.ForEach(t => point = t.Apply(point));
-            return point;
+            Points.Add(point);
         }
+
+        protected TPoint ApplyTransforms(TPoint point)
+        {
+            Point newPoint = MultipliedMatrix * point;
+            return Activator.CreateInstance(typeof(TPoint), new[] { newPoint }) as TPoint;
+        }
+        //{
+        //    return transforms.Aggregate(new Matrix3x3(), (a, b) => a * b).Transform(point);
+        //}
     }
 }

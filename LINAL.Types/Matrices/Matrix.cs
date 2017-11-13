@@ -1,64 +1,146 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using LINAL.Types.Points;
 
 namespace LINAL.Types.Matrices
 {
-    public abstract class Matrix
+    public class Matrix : IEnumerable<Matrix.Value>
     {
-        readonly double[,] data;
-
-        public uint Height { get; }
-        public uint Width { get; }
-
-        protected Matrix(uint width, uint height, bool isIdentity = true)
+        public struct Value
         {
-            Width = width;
-            Height = height;
+            public readonly int x, y;
+            public readonly double value;
 
-            data = new double[height, width];
-
-            uint identityX = 0;
-            uint identityY = 0;
-
-            for (uint y = 0; y < height; y++)
+            public Value(int x, int y, double value)
             {
-                for (uint x = 0; x < width; x++)
-                {
-                    if(x == identityX && y == identityY && isIdentity)
-                    {
-                        data[y, x] = 1.0;
-                        identityX++;
-                        identityY++;
-                    }
-                    else
-                    {
-                        data[y, x] = 0.0;
-                    }
-                }
+                this.x = x;
+                this.y = y;
+                this.value = value;
             }
-
-            //data = new double[3, 3]
-            //{
-            //    { 1.0, 0.0, 0.0 },
-            //    { 0.0, 1.0, 0.0 },
-            //    { 0.0, 0.0, 1.0 },
-            //};
         }
 
-        public double this[int x, int y]
+        readonly double[,] data;
+
+        public uint Rows { get; }
+        public uint Columns { get; }
+
+        public Matrix() { }
+
+        public Matrix(uint columns, uint rows, bool isIdentity = true)
         {
-            get => data[y, x];
+            Columns = columns;
+            Rows = rows;
+
+            data = new double[rows, columns];
+
+            if(isIdentity)
+            {
+                for (var i = 0; i < columns; i++)
+                {
+                    data[i, i] = 1.0;
+                }
+            }
+        }
+
+        public Matrix(double[,] intializeList)
+        {
+            data = intializeList;
+
+            Rows = (uint)data.GetLength(0);
+            Columns = (uint)data.GetLength(1);
+        }
+
+        public double this[int y, int x]
+        {
+            get
+            {
+                if (y < 0 || x < 0)
+                    throw new IndexOutOfRangeException();
+
+                if (y > Rows - 1 || x > Columns - 1)
+                    throw new IndexOutOfRangeException();
+
+                return data[y, x];
+            }
+
             set
             {
                 if (y < 0 || x < 0)
-                    return;
+                    throw new IndexOutOfRangeException();
 
-                if (y > Height || x > Width)
-                    return;
+                if (y > Rows - 1 || x > Columns - 1)
+                    throw new IndexOutOfRangeException();
 
                 data[y, x] = value;
             }
+        }
+
+        public IEnumerator<Value> GetEnumerator()
+        {
+            for (int y = 0; y < Rows; y++)
+            {
+                for (int x = 0; x < Columns; x++)
+                {
+                    yield return new Value ( x, y, this[y, x] );
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        public static Matrix operator*(Matrix a, Matrix b)
+        {
+            if (a.Columns != b.Rows)
+                throw new NotSupportedException();
+
+            var mat = new Matrix(b.Columns, a.Rows, false);
+
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                for (int x = 0; x < mat.Columns; x++)
+                {
+                    double sum = 0;
+
+                    for (int acol = 0; acol < a.Columns; acol++)
+                    {
+                        sum += a[y, acol] * b[acol, x];
+                    }
+
+                    mat[y, x] = sum;
+                }
+            }
+
+            return mat;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Matrix mat && mat.Columns == Columns && mat.Rows == Rows)
+            {
+                for (int y = 0; y < mat.Rows; y++)
+                {
+                    for (int x = 0; x < mat.Columns; x++)
+                    {
+                        if (Math.Abs(mat[y, x] - this[y, x]) > Double.Epsilon)
+                            return false;
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return data.GetHashCode();
         }
     }
 }

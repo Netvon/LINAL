@@ -17,7 +17,7 @@
 
         <DataTemplate x:Key="shapeView">
             <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                
+
                 <Polygon Points="{Binding PointCollection}" FillRule="Nonzero" Stroke="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Fill="#FFE3E3E3" Visibility="{Binding ShowLabel, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Polygon.Effect>
                         <DropShadowEffect ShadowDepth="0" Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" BlurRadius="10" Opacity="0.25"/>
@@ -223,6 +223,36 @@
                             controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0" StringFormat="{}{}{0:0.00}°"/>
                             <CheckBox IsChecked="{Binding Spin}" Content="Animate Spin"/>
                             <CheckBox IsChecked="{Binding IsVisible}" Content="Visible"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Content="X" Padding="0" HorizontalContentAlignment="Right"/>
+                                <Label Content="Y" Padding="0" Grid.Column="1" HorizontalContentAlignment="Right"/>
+                                <Label Content="Z" Padding="0" Grid.Column="2" HorizontalContentAlignment="Right"/>
+                            </Grid>
+
+                            <ItemsControl ItemsSource="{Binding Points}" Foreground="#FF818181" FontSize="10" AutomationProperties.IsColumnHeader="False">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Content="{Binding X}" ContentStringFormat="{}{0:0.0}" Padding="0" HorizontalContentAlignment="Right"/>
+                                            <Label Content="{Binding Y}" ContentStringFormat="{}{0:0.0}" Padding="0" Grid.Column="1" HorizontalContentAlignment="Right"/>
+                                            <Label Content="{Binding Z}" ContentStringFormat="{}{0:0.0}" Padding="0" Grid.Column="2" HorizontalContentAlignment="Right"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </Expander>
                 </StackPanel>
@@ -304,11 +334,17 @@
         </DataTemplate>
     </Window.Resources>
     <Grid >
+        <Grid.Background>
+            <ImageBrush ImageSource="Images/bg.png" TileMode="Tile" ViewportUnits="Absolute" Viewport="0,0,20,20" Viewbox="0,0,0.5,0.5" Opacity="0.2"/>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
-        <ItemsControl ItemsSource="{Binding Drawables}" ItemTemplateSelector="{StaticResource drawableViewDTS}" Background="White">
+        <ItemsControl ItemsSource="{Binding Drawables}" ItemTemplateSelector="{StaticResource drawableViewDTS}">
+            <ItemsControl.Background>
+                <ImageBrush ImageSource="Images/bg.png" TileMode="Tile" ViewportUnits="Absolute" Viewport="0,0,10,10" Viewbox="0,0,0.5,0.5" Opacity="0.1"/>
+            </ItemsControl.Background>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas IsItemsHost="true"></Canvas>
@@ -319,14 +355,32 @@
         <Grid Grid.Column="2" Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Border BorderThickness="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Margin="0" Grid.RowSpan="1" Grid.Row="2">
+            <Border Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Padding="6" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" BorderThickness="1,0,0,0">
+                <StackPanel>
+                    <Label Content="Camera controls" Padding="0,0,0,6"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <controls:NumericUpDown Value="{Binding CameraOffsetX}" controls:TextBoxHelper.UseFloatingWatermark="True" controls:TextBoxHelper.Watermark="Camera X"/>
+                        <controls:NumericUpDown Value="{Binding CameraOffsetY}" controls:TextBoxHelper.UseFloatingWatermark="True" controls:TextBoxHelper.Watermark="Camera Y" Grid.Column="1"/>
+                    </Grid>
+
+                    <controls:NumericUpDown Value="{Binding CameraRotationZ}" controls:TextBoxHelper.UseFloatingWatermark="True" controls:TextBoxHelper.Watermark="Camera Rotation" />
+                </StackPanel>
+                
+            </Border>
+            <Border BorderThickness="1,0,0,0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Margin="0" Grid.RowSpan="1" Grid.Row="3">
                 <ScrollViewer>
                     <ItemsControl ItemsSource="{Binding Drawables}" ItemTemplateSelector="{StaticResource drawableItemEditorDTS}" Padding="6"/>
                 </ScrollViewer>
             </Border>
-            <Border BorderThickness="0" Background="#FFE5E5E5" Padding="12,6,20,6" VerticalAlignment="Top" >
+            <Border BorderThickness="1,0,0,0" Background="#FFE5E5E5" Padding="12,6,20,6" VerticalAlignment="Top" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" >
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,-1.5,0">
                     <Button Command="{Binding AddTriangleCommand}" Margin="1.5,0" >
                         Add Triangle

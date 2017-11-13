@@ -4,26 +4,27 @@ using System.Text;
 
 namespace LINAL.Types.Transforms
 {
-    public class Scale : Transform
+    public class Skew2D : Transform2D
     {
         public override double X
         {
-            get => matrix[0, 0];
+            get => this[0, 1];
             set
             {
-                matrix[0, 0] = value;
+                this[0, 1] = value;
             }
         }
 
         public override double Y
         {
-            get => matrix[1, 1];
+            get => this[1, 0];
             set
             {
-                matrix[1, 1] = value;
+                this[1, 0] = value;
             }
         }
 
+        [NotImplemented]
         public override double Z { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }
