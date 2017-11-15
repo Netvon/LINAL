@@ -82,6 +82,68 @@
                 </Label>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="shape3dView">
+            <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                <!--<Polygon Points="{Binding PointCollection}" FillRule="Nonzero" Stroke="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Fill="#FFE3E3E3" Visibility="{Binding ShowLabel, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Polygon.Effect>
+                        <DropShadowEffect ShadowDepth="0" Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" BlurRadius="10" Opacity="0.25"/>
+                    </Polygon.Effect>
+                </Polygon>
+                <Polygon Points="{Binding PointCollection}" FillRule="Nonzero" Stroke="#FFCFCFCF" Fill="#FFE3E3E3">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseOverCommand}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding MouseOverCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Polygon>-->
+                <ItemsControl ItemsSource="{Binding Points}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas IsItemsHost="true"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Ellipse RenderTransformOrigin="1,1" Width="3" Height="3" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#FF9F9F9F">
+                                    <Ellipse.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
+                                        </TransformGroup>
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<Ellipse RenderTransformOrigin="1,1" Width="3" Height="3" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#FF45ADE8">
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform X="{Binding CenterX}" Y="{Binding CenterY}"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>-->
+                <!--<Label Content="{Binding Name}" RenderTransformOrigin="1,1" VerticalAlignment="Stretch" Padding="0,8,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="6" FontFamily="Segoe UI Light" Foreground="#BF000000">
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                            <SkewTransform/>
+                            <TranslateTransform X="{Binding CenterX}" Y="{Binding CenterY}"/>
+                        </TransformGroup>
+                    </Label.RenderTransform>
+                </Label>-->
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="vectorView">
             <Grid>
                 <i:Interaction.Triggers>
@@ -264,6 +326,151 @@
                 </StackPanel>
             </Border>
         </DataTemplate>
+        <DataTemplate x:Key="shape3dItemEditor">
+            <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" BorderThickness="1" Margin="0,1.5" Background="White" Padding="6,12">
+               
+                <StackPanel>
+                    <Label Content="Shape" FontSize="10" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Padding="3" Margin="-6,-12,-6,6" Background="#FFF1F1F1"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox controls:TextBoxHelper.Watermark="Box Name" controls:TextBoxHelper.UseFloatingWatermark="True"
+                                         Text="{Binding Name}" Margin="0,0,6,0"/>
+                        <Button Grid.Column="1" Command="{Binding Main.RemoveBoxCommand, Source={StaticResource Locator}}" CommandParameter="{Binding Name}">
+                            <fa:ImageAwesome Icon="Trash" />
+                        </Button>
+                    </Grid>
+
+                    <Expander Header="Values" Margin="-6,6,-6,-12">
+                        <StackPanel Margin="2">
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <controls:NumericUpDown Value="{Binding LocationX}"
+                            Interval="1" 
+                            controls:TextBoxHelper.Watermark="Location X" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0" SnapToMultipleOfInterval="True"
+                                                        StringFormat="{}{0:0.0} px"/>
+                                <controls:NumericUpDown Value="{Binding LocationY}"
+                            Interval="1" 
+                            controls:TextBoxHelper.Watermark="Location Y" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0"
+                                                Grid.Column="1"
+                                                        StringFormat="{}{0:0.0} px"/>
+                                <controls:NumericUpDown Value="{Binding LocationZ}"
+                            Interval="1" 
+                            controls:TextBoxHelper.Watermark="Location Z" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0"
+                                                Grid.Column="2"
+                                                        StringFormat="{}{0:0.0} px"/>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <controls:NumericUpDown Value="{Binding Width}"
+                            Interval="0.1" 
+                            controls:TextBoxHelper.Watermark="Width" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0" SnapToMultipleOfInterval="True"
+                                                        StringFormat="{}{0:0.0} px"/>
+                                <controls:NumericUpDown Value="{Binding Height}"
+                            Interval="0.1" 
+                            controls:TextBoxHelper.Watermark="Height" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0"
+                                                Grid.Column="1" StringFormat="{}{0:0.0} px"/>
+
+                                <controls:NumericUpDown Value="{Binding Depth}"
+                            Interval="0.1" 
+                            controls:TextBoxHelper.Watermark="Depth" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0"
+                                                Grid.Column="2" StringFormat="{}{0:0.0} px"/>
+                            </Grid>
+
+                            <!--<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <controls:NumericUpDown Value="{Binding ScaleX}"
+                            Interval="0.1" 
+                            controls:TextBoxHelper.Watermark="Scale X" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0" SnapToMultipleOfInterval="True" StringFormat="{}{0:0.0}x"/>
+                                <controls:NumericUpDown Value="{Binding ScaleY}"
+                            Interval="0.1" 
+                            controls:TextBoxHelper.Watermark="Scale Y" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0"
+                                                Grid.Column="1" StringFormat="{}{0:0.0}x"/>
+                            </Grid>-->
+
+                            <!--<Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <controls:NumericUpDown Value="{Binding SkewX}" StringFormat="{}{}{0:0.00}°"
+                            Interval="0.1" 
+                            controls:TextBoxHelper.Watermark="Skew X" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0" SnapToMultipleOfInterval="True"/>
+                                <controls:NumericUpDown Value="{Binding SkewY}" StringFormat="{}{}{0:0.00}°"
+                            Interval="0.1" 
+                            controls:TextBoxHelper.Watermark="Skew Y" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0"
+                                                Grid.Column="1"/>
+                            </Grid>
+
+                            <controls:NumericUpDown Value="{Binding Rotation}"
+                            Interval="2" 
+                            controls:TextBoxHelper.Watermark="Rotation" 
+                            controls:TextBoxHelper.UseFloatingWatermark="True" Margin="0,0,1.5,0" StringFormat="{}{}{0:0.00}°"/>
+                            <CheckBox IsChecked="{Binding Spin}" Content="Animate Spin"/>-->
+                            <CheckBox IsChecked="{Binding IsVisible}" Content="Visible"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Content="X" Padding="0" HorizontalContentAlignment="Right"/>
+                                <Label Content="Y" Padding="0" Grid.Column="1" HorizontalContentAlignment="Right"/>
+                                <Label Content="Z" Padding="0" Grid.Column="2" HorizontalContentAlignment="Right"/>
+                            </Grid>
+
+                            <ItemsControl ItemsSource="{Binding Points}" Foreground="#FF818181" FontSize="10" AutomationProperties.IsColumnHeader="False">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Content="{Binding X}" ContentStringFormat="{}{0:0.0}" Padding="0" HorizontalContentAlignment="Right" FontFamily="Consolas"/>
+                                            <Label Content="{Binding Y}" ContentStringFormat="{}{0:0.0}" Padding="0" Grid.Column="1" HorizontalContentAlignment="Right" FontFamily="Consolas"/>
+                                            <Label Content="{Binding Z}" ContentStringFormat="{}{0:0.0}" Padding="0" Grid.Column="2" HorizontalContentAlignment="Right" FontFamily="Consolas"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!--<Label Content="{Binding MultipliedMatrix}" FontFamily="Consolas"/>-->
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
         <DataTemplate x:Key="vectorItemEditor">
             <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" BorderThickness="1" Margin="0,1.5" Background="White" Padding="6,12">
                 <i:Interaction.Triggers>
@@ -356,8 +563,35 @@
         </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="400"/>
         </Grid.ColumnDefinitions>
+
+        <!--<ItemsControl ItemsSource="{Binding PointsThroughCamera}"/>-->
+
+        <ItemsControl ItemsSource="{Binding PointsThroughCamera}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas IsItemsHost="true"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Ellipse RenderTransformOrigin="1,1" Width="3" Height="3" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#FF3400FF">
+                            <Ellipse.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
+                                </TransformGroup>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
         <ItemsControl ItemsSource="{Binding Drawables}" ItemTemplateSelector="{StaticResource drawableViewDTS}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Loaded">

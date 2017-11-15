@@ -1,7 +1,7 @@
 ﻿using LINAL.Types.Points;
 using System;
 
-namespace LINAL.Types
+namespace LINAL.Types.Vectors
 {
     public class Vector3 : Point3, IEquatable<Vector3>
     {
@@ -10,6 +10,15 @@ namespace LINAL.Types
 
         public Vector3(double x, double y, double z) : base(x, y, z)
         { }
+
+        public Vector3 Cross(Vector3 other)
+        {
+            return new Vector3(
+                (Y * other.Z) - (Z * other.Y),
+                (Z * other.X) - (X * other.Z),
+                (X * other.Y) - (Y * other.X)
+            );
+        }
 
         public static Vector3 operator +(Vector3 a, Vector3 b)
         {

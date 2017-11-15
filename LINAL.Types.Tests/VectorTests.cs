@@ -1,3 +1,4 @@
+using LINAL.Types.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 

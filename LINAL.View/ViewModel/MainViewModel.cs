@@ -2,7 +2,9 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using LINAL.Types;
 using LINAL.Types.Points;
+using LINAL.Types.Projection;
 using LINAL.Types.Shapes;
+using LINAL.Types.Vectors;
 using LINAL.View.Model;
 using System;
 using System.Collections.Generic;
@@ -31,6 +33,29 @@ namespace LINAL.View.ViewModel
         public int StrokeSize { get; set; }
         public ObservableCollection<Drawable> Drawables { get; }
 
+        Camera3 camera = new Camera3()
+        {
+            Eye = new Point3(0, 0, 0),
+            LookAt = new Point3(0, 0, 1),
+            Near = 2,
+            Far = 100,
+            FieldOfView = 45,
+            Size = 500
+        };
+
+        public IEnumerable<Point3> PointsThroughCamera
+        {
+            get
+            {
+                return Drawables
+                    .OfType<Shape3DModel>()
+                    .SelectMany(x => x.Points)
+                    .Select(camera.Transform)
+                    .Where(x => x.W > 0)
+                    .Select(x => new Point3(x.X, x.Y, x.Z));
+            }
+        }
+
         public ICommand LineMouseOverCommand => new RelayCommand<string>(OnLineMouseOver);
         public ICommand AddVectorCommand => new RelayCommand(AddVector);
         public ICommand AddBoxCommand => new RelayCommand(AddBox);
@@ -41,6 +66,7 @@ namespace LINAL.View.ViewModel
 
         private void Something(object obj)
         {
+
             if(obj is RoutedEventArgs routed && routed.Source is FrameworkElement source)
             {
                 CameraCenterX = source.ActualWidth / 2;
@@ -48,6 +74,11 @@ namespace LINAL.View.ViewModel
 
                 CameraOffsetX = CameraCenterX;
                 CameraOffsetY = CameraCenterY;
+
+                //camera.LookAt = new Point3(0, 0, CameraCenterY);
+                //camera.Size = source.ActualWidth;
+
+                RaisePropertyChanged(nameof(PointsThroughCamera));
             }
         }
 
@@ -216,18 +247,53 @@ namespace LINAL.View.ViewModel
                 //    Vector = new Vector3(20,20,0)
                 //},
 
-                new ShapeModel(new Box(100, 100, 30, 30))
+                //new ShapeModel(new Box(100, 100, 30, 30))
+                //{
+                //    Name = "Box 1",
+                //    IsVisible = false
+                //},
+
+                //new ShapeModel(new Box(300, 100, 10, 10))
+                //{
+                //    Name = "Box 2",
+                //    ScaleX = 3,
+                //    ScaleY = 3,
+                //    IsVisible = false
+                //},
+
+                new Shape3DModel(new Cube(0,0,100, 20,20,20))
                 {
-                    Name = "Box 1"
+                    Name = "Hallo",
+                    IsVisible = false
                 },
 
-                new ShapeModel(new Box(300, 100, 10, 10))
+                new Shape3DModel(new Cube(-100,0,100, 20,20,20))
                 {
-                    Name = "Box 2",
-                    ScaleX = 3,
-                    ScaleY = 3
-                },
+                    Name = "Hallo",
+                    IsVisible = false
+                }
             };
+
+            Drawables.CollectionChanged += (s, e) =>
+            {
+                RaisePropertyChanged(nameof(PointsThroughCamera));
+
+                foreach (var item in e.NewItems.OfType<Shape3DModel>())
+                {
+                    item.PropertyChanged += (s1, e1) =>
+                    {
+                        RaisePropertyChanged(nameof(PointsThroughCamera));
+                    };
+                }
+            };
+
+            foreach (var item in Drawables.OfType<Shape3DModel>())
+            {
+                item.PropertyChanged += (s, e) =>
+                {
+                    RaisePropertyChanged(nameof(PointsThroughCamera));
+                };
+            }
 
             //ABox = new Box2Model(100, 100, 30, 30);
             //ABox.Box.Rotation = 0;

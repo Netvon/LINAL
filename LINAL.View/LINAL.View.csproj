@@ -80,6 +80,7 @@
     </ApplicationDefinition>
     <Compile Include="DataTemplateSelectors\DrawableItemEditorDataTemplateSelector.cs" />
     <Compile Include="DataTemplateSelectors\DrawableViewDataTemplateSelector.cs" />
+    <Compile Include="Model\Shape3DModel.cs" />
     <Compile Include="Model\ShapeModel.cs" />
     <Compile Include="Model\Drawable.cs" />
     <Compile Include="Model\Vector2Model.cs" />
