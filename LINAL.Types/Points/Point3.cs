@@ -11,7 +11,7 @@ namespace LINAL.Types.Points
         public double Y { get => this[1]; set => this[1] = value; }
         public double Z { get => this[2]; set => this[2] = value; }
 
-        public Point3() : this(0, 0, 0)
+        public Point3() : this(0, 0, 1)
         {
 
         }

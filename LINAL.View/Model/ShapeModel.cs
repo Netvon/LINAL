@@ -123,6 +123,12 @@ namespace LINAL.View.Model
             }
         }
 
+        public Point3 Center => CalcPoint(Shape.Center);
+        public double CenterX => Center.X;
+        public double CenterY => Center.Y;
+
+        public LINAL.Types.Matrices.Matrix Matrix => Shape.MultipliedMatrix;
+
         public bool Spin
         {
             get => spin;
@@ -160,9 +166,14 @@ namespace LINAL.View.Model
         {
             OnPropertyChanged(nameof(Points));
             OnPropertyChanged(nameof(PointCollection));
+            OnPropertyChanged(nameof(Center));
+            OnPropertyChanged(nameof(CenterX));
+            OnPropertyChanged(nameof(CenterY));
+            OnPropertyChanged(nameof(Matrix));
+            OnPropertyChanged(nameof(MultipliedMatrix));
         }
 
-        private Translate2D CameraOffset { get; set; } = new Translate2D
+        Translate2D CameraOffset { get; } = new Translate2D
         {
             X = 0,
             Y = 0
@@ -201,15 +212,42 @@ namespace LINAL.View.Model
             }
         }
 
-        private Rotate2D CameraRotation { get; set; } = new Rotate2D
+        Rotate2D CameraRotation { get; } = new Rotate2D
         {
             Z = 0
         };
+
+        Point2 CameraCenter { get; } = new Point2(100, 100);
+
+        public double CameraCenterX
+        {
+            get => CameraCenter.X;
+            set
+            {
+                CameraCenter.X = value;
+                OnPropertyChanged();
+                Changed();
+            }
+        }
+
+        public double CameraCenterY
+        {
+            get => CameraCenter.Y;
+            set
+            {
+                CameraCenter.Y = value;
+                OnPropertyChanged();
+                Changed();
+            }
+        }
 
         public IEnumerable<Point3> Points
         {
             get
             {
+                //var pi = CameraCenter.ToIdentity();
+                //var npi = CameraCenter.ToNegatedIdentity();
+
                 //var translate2D = new Translate2D
                 //{
                 //    X = 0,
@@ -221,10 +259,20 @@ namespace LINAL.View.Model
                 //    Z = 0
                 //};
 
-                return Shape.Select(x => new Point3(CameraOffset * CameraRotation * x)).ToList();
+                return Shape.Select(CalcPoint).ToList();
             }
         }
 
+        Point3 CalcPoint(Point3 point)
+        {
+            var pi = CameraCenter.ToIdentity();
+            var npi = CameraCenter.ToNegatedIdentity();
+
+            return new Point3(pi * CameraRotation * npi * CameraOffset * point);
+        }
+
         public PointCollection PointCollection => new PointCollection(Points.Select(p => new System.Windows.Point(p.X, p.Y)));
+
+        public Types.Matrices.Matrix MultipliedMatrix => Shape.MultipliedMatrix;
     }
 }

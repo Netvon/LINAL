@@ -19,8 +19,6 @@ namespace LINAL.Types.Points
 
         private double[] values;
 
-        
-
         public Point(double[] init)
         {
             values = init;
@@ -41,6 +39,45 @@ namespace LINAL.Types.Points
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public double Dot(Point other)
+        {
+            if (AxisCount != other.AxisCount)
+                throw new NotSupportedException();
+
+            var result = 0.0d;
+
+            for (int i = 0; i < AxisCount; i++)
+            {
+                result += this[i] * other[i];
+            }
+
+            return result;
+        }
+
+        public Matrix ToIdentity()
+        {
+            var matrix = new Matrix((uint)(AxisCount + 1), (uint)(AxisCount + 1), true);
+
+            for (int i = 0; i < AxisCount; i++)
+            {
+                matrix[i, AxisCount] = this[i];
+            }
+
+            return matrix;
+        }
+
+        public Matrix ToNegatedIdentity()
+        {
+            var matrix = new Matrix((uint)(AxisCount + 1), (uint)(AxisCount + 1), true);
+
+            for (int i = 0; i < AxisCount; i++)
+            {
+                matrix[i, AxisCount] = - this[i];
+            }
+
+            return matrix;
         }
 
         public static implicit operator Matrix(Point point)

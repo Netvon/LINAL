@@ -53,6 +53,52 @@ namespace LINAL.Types.Matrices
             Columns = (uint)data.GetLength(1);
         }
 
+        public Matrix WithColumn(double[] column)
+        {
+            if (column.Length != Rows)
+                throw new NotSupportedException();
+
+            var newMatrix = new Matrix(Columns + 1, Rows, false);
+            CopyTo(ref newMatrix);
+
+            for (int i = 0; i < column.Length; i++)
+            {
+                newMatrix[i, (int)newMatrix.Columns] = column[i];
+            }
+
+            return newMatrix;
+        }
+
+        public Matrix Concat(Matrix other)
+        {
+            var col = Columns + other.Columns;
+            var row = Math.Max(Rows, other.Rows);
+
+            var newMatrix = new Matrix(col, row, false);
+            CopyTo(ref newMatrix);
+
+            for (var y = Rows; y < newMatrix.Rows; y++)
+            {
+                for (var x = Columns; x < newMatrix.Columns; x++)
+                {
+                    newMatrix[(int)y, (int)x] = other[(int)(y - Rows), (int)(x - Columns)];
+                }
+            }
+
+            return newMatrix;
+        }
+
+        public void CopyTo(ref Matrix target)
+        {
+            for (int y = 0; y < Rows; y++)
+            {
+                for (int x = 0; x < Columns; x++)
+                {
+                    target[y, x] = this[y, x];
+                }
+            }
+        }
+
         public double this[int y, int x]
         {
             get
@@ -118,6 +164,72 @@ namespace LINAL.Types.Matrices
             return mat;
         }
 
+        public static Matrix operator+(Matrix a, Matrix b)
+        {
+            if(a.Rows != b.Rows || a.Columns != b.Columns)
+                throw new NotSupportedException();
+
+            var mat = new Matrix(a.Columns, a.Rows, false);
+
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                for (int x = 0; x < mat.Columns; x++)
+                {
+                    mat[y, x] = a[y, x] + b[y, x];
+                }
+            }
+
+            return mat;
+        }
+
+        public static Matrix operator -(Matrix a, Matrix b)
+        {
+            if (a.Rows != b.Rows || a.Columns != b.Columns)
+                throw new NotSupportedException();
+
+            var mat = new Matrix(a.Columns, a.Rows, false);
+
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                for (int x = 0; x < mat.Columns; x++)
+                {
+                    mat[y, x] = a[y, x] - b[y, x];
+                }
+            }
+
+            return mat;
+        }
+
+        public static Matrix operator *(Matrix a, int scalar)
+        {
+            var mat = new Matrix(a.Columns, a.Rows, false);
+
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                for (int x = 0; x < mat.Columns; x++)
+                {
+                    mat[y, x] = a[y,x] * scalar;
+                }
+            }
+
+            return mat;
+        }
+
+        public static Matrix operator *(Matrix a, double scalar)
+        {
+            var mat = new Matrix(a.Columns, a.Rows, false);
+
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                for (int x = 0; x < mat.Columns; x++)
+                {
+                    mat[y, x] = a[y, x] * scalar;
+                }
+            }
+
+            return mat;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is Matrix mat && mat.Columns == Columns && mat.Rows == Rows)
@@ -141,6 +253,22 @@ namespace LINAL.Types.Matrices
         public override int GetHashCode()
         {
             return data.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var maxLength = this.Select(x => x.value.ToString("0.0").Length).OrderBy(x => x).Last();
+
+            var stringValues = this.Select(x => x.value.ToString("0.0").PadLeft(maxLength, ' '));
+
+            for (int row = 0; row < Rows; row++)
+            {
+                output += string.Join(" ", stringValues.Skip((int)(row * Columns)).Take((int)Columns)) + "\n";
+            }
+
+            return output;
         }
     }
 }

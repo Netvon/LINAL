@@ -24,6 +24,14 @@ namespace LINAL.Types.Shapes
         public IEnumerable<Matrix> Transforms => transforms;
         public Matrix MultipliedMatrix => transforms.Skip(1).Aggregate(transforms[0], (a, b) => a * b);
 
+        //public Matrix PointsToMatrix
+        //{
+        //    get
+        //    {
+        //        return new Matrix(Points.Count, Points.First().AxisCount, false);
+        //    }
+        //}
+
         public IEnumerator<TPoint> GetEnumerator()
         {
             return Points.Select(p => ApplyTransforms(p)).GetEnumerator();
@@ -40,6 +48,8 @@ namespace LINAL.Types.Shapes
         {
             Points.Add(point);
         }
+
+        public TPoint Center => ApplyTransforms(new TPoint());
 
         protected TPoint ApplyTransforms(TPoint point)
         {

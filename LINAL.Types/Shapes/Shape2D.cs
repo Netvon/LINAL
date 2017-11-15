@@ -24,15 +24,19 @@ namespace LINAL.Types.Shapes
                     Y = y
                 },
 
+                new Rotate2D(),
+
                 new Size2D // size
                 {
                     X = width,
                     Y = height
                 },
 
+                
+
                 new Scale2D(),
 
-                new Rotate2D(),
+                
                 new Skew2D(),
             });
         }

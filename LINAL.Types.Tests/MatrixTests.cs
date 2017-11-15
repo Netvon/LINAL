@@ -129,6 +129,14 @@ namespace LINAL.Types.Tests
                 { 0.0, 0.0, 1.0 }
             });
 
+            var point2 = new Point2(12, 10);
+            var pi = point2.ToIdentity();
+            var npi = point2.ToNegatedIdentity();
+
+
+            var matrix = new Matrix(2, 2, true);
+            var matWithP2 = matrix.Concat(point2);
+
             Point resultFromTranslate = translate2d * point;
             Point resultFromMatrix = translate * point;
 

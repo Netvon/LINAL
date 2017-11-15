@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace LINAL.View.ViewModel
@@ -36,10 +37,28 @@ namespace LINAL.View.ViewModel
         public ICommand AddTriangleCommand => new RelayCommand(AddTriangle);
         public ICommand RemoveVectorCommand => new RelayCommand<string>(RemoveVector);
         public ICommand RemoveBoxCommand => new RelayCommand<string>(RemoveBox);
+        public ICommand SomethingChanged => new RelayCommand<object>(Something);
+
+        private void Something(object obj)
+        {
+            if(obj is RoutedEventArgs routed && routed.Source is FrameworkElement source)
+            {
+                CameraCenterX = source.ActualWidth / 2;
+                CameraCenterY = source.ActualHeight / 2;
+
+                CameraOffsetX = CameraCenterX;
+                CameraOffsetY = CameraCenterY;
+            }
+        }
+
+        public int ViewWidth { get; set; }
+        public int ViewHeight { get; set; }
 
         double cameraRot;
         double cameraOffsetX;
         double cameraOffsetY;
+        double cameraCenterX = 100;
+        double cameraCenterY = 100;
 
         public double CameraRotationZ
         {
@@ -55,6 +74,43 @@ namespace LINAL.View.ViewModel
                 }
 
                 cameraRot = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public double CameraCenterX
+        {
+            get => cameraCenterX;
+            set
+            {
+                foreach (var d in Drawables)
+                {
+                    if (d is ShapeModel s)
+                    {
+                        s.CameraCenterX = value;
+                    }
+                }
+
+                cameraCenterX = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public double CameraCenterY
+        {
+            get => cameraCenterY;
+            set
+            {
+                foreach (var d in Drawables)
+                {
+                    if (d is ShapeModel s)
+                    {
+                        s.CameraCenterY = value;
+                    }
+                }
+
+                cameraCenterY = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -72,6 +128,7 @@ namespace LINAL.View.ViewModel
                 }
 
                 cameraOffsetX = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -89,6 +146,8 @@ namespace LINAL.View.ViewModel
                 }
 
                 cameraOffsetY = value;
+
+                RaisePropertyChanged();
             }
         }
 
