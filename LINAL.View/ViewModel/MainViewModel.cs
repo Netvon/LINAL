@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace LINAL.View.ViewModel
 {
@@ -39,7 +40,7 @@ namespace LINAL.View.ViewModel
             LookAt = new Point3(0, 0, 1),
             Near = 2,
             Far = 100,
-            FieldOfView = 45,
+            FieldOfView = 40,
             Size = 500
         };
 
@@ -53,6 +54,43 @@ namespace LINAL.View.ViewModel
                     .Select(camera.Transform)
                     .Where(x => x.W > 0)
                     .Select(x => new Point3(x.X, x.Y, x.Z));
+            }
+        }
+
+        public IEnumerable<PointCollection> PointCollectionThroughCamera
+        {
+            get
+            {
+                var t = Drawables
+                    .OfType<Shape3DModel>()
+                    .Select(x => new { points = x.Points.Select(camera.Transform), indecies = x.Shape.InnerShapesIndecies() });
+
+                foreach (var item in t)
+                {
+                    var h = item.indecies.Select(x => x.Select(i => item.points.ElementAt((int)i)));
+                    var b = h.Select(x => x.Select(p => new System.Windows.Point(p.X, p.Y)));
+                    var c = b.Select(x => new PointCollection(x));
+
+                    return c;
+                }
+
+                return null;
+
+
+                //return Drawables
+                //    .OfType<Shape3DModel>()
+                //    .Select(x => x.Shape.InnerShapesIndecies().Select(i => i.Select(ii => x.Shape.ElementAt((int)ii))))
+                //    .SelectMany(x =>
+                //    {
+                //        return x.Select(p => p.Select(camera.Transform).Select(p4 => new System.Windows.Point(p4.X, p4.Y)));
+                //    })
+                //    .Select(x => new PointCollection(x));
+
+                //return Drawables
+                //    .OfType<Shape3DModel>()
+                //    .Select(x => x.Points.Select(camera.Transform))
+                //    .Select(x => x.Select(p => new System.Windows.Point(p.X, p.Y)))
+                //    .Select(x => new PointCollection(x));
             }
         }
 
@@ -79,6 +117,7 @@ namespace LINAL.View.ViewModel
                 //camera.Size = source.ActualWidth;
 
                 RaisePropertyChanged(nameof(PointsThroughCamera));
+                RaisePropertyChanged(nameof(PointCollectionThroughCamera));
             }
         }
 
@@ -283,6 +322,7 @@ namespace LINAL.View.ViewModel
                     item.PropertyChanged += (s1, e1) =>
                     {
                         RaisePropertyChanged(nameof(PointsThroughCamera));
+                        RaisePropertyChanged(nameof(PointCollectionThroughCamera));
                     };
                 }
             };
@@ -292,6 +332,7 @@ namespace LINAL.View.ViewModel
                 item.PropertyChanged += (s, e) =>
                 {
                     RaisePropertyChanged(nameof(PointsThroughCamera));
+                    RaisePropertyChanged(nameof(PointCollectionThroughCamera));
                 };
             }
 

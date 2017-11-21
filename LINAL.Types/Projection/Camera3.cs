@@ -81,8 +81,8 @@ namespace LINAL.Types.Projection
 
         private Point4 Fix(Vector4 vector)
         {
-            var x = (Size / 2) + (((vector.X + 1) / vector.W) * Size * 0.5);
-            var y = (Size / 2) + (((vector.Y + 1) / vector.W) * Size * 0.5);
+            var x = (Size / 2) + (((vector.X + 1) / vector.W) * (Size * 0.5));
+            var y = (Size / 2) + (((vector.Y + 1) / vector.W) * (Size * 0.5));
             var z = -vector.Z;
 
             return new Point4(x, y, z, vector.W);

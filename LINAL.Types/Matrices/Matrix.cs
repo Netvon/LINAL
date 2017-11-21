@@ -88,6 +88,20 @@ namespace LINAL.Types.Matrices
             return newMatrix;
         }
 
+        public void Reset(bool isIdentity = true)
+        {
+            for (var y = 0; y < Rows; y++)
+            {
+                for (var x = 0; x < Columns; x++)
+                {
+                    if(x == y && isIdentity)
+                        this[y, x] = 1;
+                    else
+                        this[y, x] = 0;
+                }
+            }
+        }
+
         public void CopyTo(ref Matrix target)
         {
             for (int y = 0; y < Rows; y++)
@@ -139,6 +153,7 @@ namespace LINAL.Types.Matrices
         {
             return GetEnumerator();
         }
+
         public static Matrix operator*(Matrix a, Matrix b)
         {
             if (a.Columns != b.Rows)

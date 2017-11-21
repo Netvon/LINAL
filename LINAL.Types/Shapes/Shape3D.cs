@@ -52,5 +52,23 @@ namespace LINAL.Types.Shapes
         {
             get => transforms.Find(t => t is Translate3D) as Translate3D;
         }
+
+        public IEnumerable<uint[]> InnerShapesIndecies()
+        {
+            var columns = triangles.GetLength(0);
+            var rows = triangles.GetLength(1);
+
+            var result = new uint[columns];
+
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < columns; x++)
+                {
+                    result[x] = triangles[x, y];
+                }
+
+                yield return result;
+            }
+        }
     }
 }

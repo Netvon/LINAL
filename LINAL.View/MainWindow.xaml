@@ -568,6 +568,20 @@
 
         <!--<ItemsControl ItemsSource="{Binding PointsThroughCamera}"/>-->
 
+        <ItemsControl ItemsSource="{Binding PointCollectionThroughCamera}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas IsItemsHost="true"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Polygon Points="{Binding b}" FillRule="EvenOdd" Stroke="#FFC27272" Fill="#FFE3E3E3">
+                    </Polygon>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <ItemsControl ItemsSource="{Binding PointsThroughCamera}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
